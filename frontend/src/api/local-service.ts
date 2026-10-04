@@ -1,5 +1,6 @@
 import { MODULE_BY_KEY } from '@/data/modules'
 import { allRows, listRows, resetRows, saveRows } from '@/data/local-store'
+import { buildChecklist } from '@/release/db'
 import type { ActionResult, EntryRow, ModuleMeta, OverviewResult, PageResult } from '@/data/types'
 
 // 会写进数据的「往回走」动作：命中就把这条记录标成异常态，看板上能一眼看出来。
@@ -86,15 +87,15 @@ export function downloadEntries(key: string): void {
 
 export function loadOverview(): OverviewResult {
   const rows = allRows()
-  const modules = [...MODULE_BY_KEY.values()].map((meta) => {
-    const entries = rows[meta.key] ?? []
-    return {
-      name: meta.name,
-      created: entries.length,
-      pending: entries.filter((row) => row.pending).length,
-      abnormal: entries.filter((row) => row.abnormal).length,
-    }
-  })
+  // 运营概览与发布流水线共用同一份核对清单口径（终态/待办定义一致）。
+  const checklist = buildChecklist(rows)
+  const modules = checklist.map((item) => ({
+    name: item.name,
+    created: item.total,
+    pending: item.pending,
+    abnormal: item.abnormal,
+    todos: item.todos.reduce((sum, todo) => sum + todo.count, 0),
+  }))
   const cards = [
     { label: '业务模块', value: modules.length },
     { label: '登记总量', value: modules.reduce((sum, item) => sum + item.created, 0) },

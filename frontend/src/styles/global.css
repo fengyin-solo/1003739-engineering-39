@@ -35,3 +35,48 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .error-text { color: #b42318; }
 .status-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .legend-item { background: #eef2f7; border-radius: 999px; padding: 2px 10px; }
+
+/* ===== 发布检查流水线面板 ===== */
+.release-panel, .release-check-panel { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-top: 18px; }
+.release-head, .release-check-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.release-head h3, .release-check-head h3 { margin: 0; font-size: 15px; }
+.release-desc { color: var(--muted); font-size: 12px; margin: 4px 0 0; max-width: 720px; }
+.release-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.inject-select { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+.inject-select select { padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; }
+.step-track { list-style: none; padding: 0; margin: 14px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.step-item { border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; background: #fafbfc; }
+.step-index { width: 20px; height: 20px; border-radius: 50%; background: #e2e8f0; color: #475569; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; }
+.step-name { font-size: 13px; font-weight: 600; }
+.step-badge { font-size: 11px; color: var(--muted); }
+.step-error { color: #b42318; font-size: 11px; word-break: break-all; }
+.step-item.is-ok { border-color: #a6e3c0; background: #f1fbf5; }
+.step-item.is-ok .step-index { background: #12b76a; color: #fff; }
+.step-item.is-failed { border-color: #f5b5b0; background: #fef3f2; }
+.step-item.is-failed .step-index { background: #d92d20; color: #fff; }
+.step-item.is-rolled-back { border-color: #fde68a; background: #fffbeb; }
+.step-item.is-rolled-back .step-index { background: #f59e0b; color: #fff; }
+.step-item.is-kept { border-color: #c7d7fe; background: #f5f8ff; }
+.step-item.is-kept .step-index { background: #6172f3; color: #fff; }
+.step-item.is-running .step-index { background: var(--brand); color: #fff; }
+.release-meta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: 12px; color: var(--muted); }
+.tag-succeeded { color: #027a48; }
+.tag-rolled-back { color: #b54708; }
+.retry-note { color: #b54708; }
+.release-checklist, .release-events { margin-top: 12px; font-size: 13px; }
+.release-checklist summary, .release-events summary { cursor: pointer; font-weight: 600; margin-bottom: 6px; }
+.todo-cell { display: flex; flex-wrap: wrap; gap: 4px; }
+.todo-chip { background: #eef2f7; border-radius: 4px; padding: 1px 6px; font-size: 12px; }
+.muted { color: var(--muted); }
+.warn-num { color: #b54708; font-weight: 600; }
+.err-num { color: #b42318; font-weight: 600; }
+.event-list { list-style: none; margin: 0; padding: 0; max-height: 260px; overflow: auto; }
+.event-list li { display: flex; gap: 8px; padding: 3px 0; border-bottom: 1px dashed #eef2f7; font-size: 12px; }
+.event-list time { color: var(--muted); white-space: nowrap; }
+.event-kind { font-weight: 600; width: 110px; flex-shrink: 0; }
+.event-step-failed .event-kind, .event-rollback-begin .event-kind { color: #b42318; }
+.event-retry .event-kind, .event-rollback-end .event-kind { color: #b54708; }
+.event-finish .event-kind, .event-step-ok .event-kind { color: #027a48; }
+.release-check-panel { margin-top: 14px; }
+.release-check-head h3 { font-size: 14px; }
+.sync-message { display: inline-block; margin-top: 8px; font-size: 12px; color: #027a48; }

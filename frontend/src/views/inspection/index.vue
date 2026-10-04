@@ -18,6 +18,35 @@
       </article>
     </div>
 
+    <section class="release-check-panel">
+      <header class="release-check-head">
+        <div>
+          <h3>发布核查项（与运营概览发布流水线同步）</h3>
+          <p class="page-desc">发布流水线执行「巡检核查项同步」时写入同一批核查项；此处可补同步、逐条核查完成。</p>
+        </div>
+        <button class="btn" type="button" @click="syncChecks">补同步核查项</button>
+      </header>
+      <table class="data-table" v-if="releaseChecks.length">
+        <thead>
+          <tr><th>核查项</th><th>关联批次</th><th>日期</th><th>状态</th><th>操作</th></tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in releaseChecks" :key="item.id">
+            <td>{{ item.title }}</td>
+            <td>{{ item.batchRef }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.status }}</td>
+            <td>
+              <button v-if="item.pending" class="link" type="button" @click="finishCheck(item.id)">核查完成</button>
+              <span v-else class="muted">已闭环</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-else class="empty-state">还没有发布核查项，先到运营概览执行发布检查，或点「补同步核查项」</p>
+      <span v-if="checkMessage" class="sync-message">{{ checkMessage }}</span>
+    </section>
+
     <p class="status-legend">
       <span v-for="item in statusSummary" :key="item.status" class="legend-item">
         {{ item.status }}：{{ item.count }}
@@ -74,6 +103,12 @@
 import { computed, onMounted, ref } from 'vue'
 
 import {
+  completeReleaseCheck,
+  listReleaseChecks,
+  syncReleaseChecksNow,
+  type ReleaseCheckRow,
+} from '@/api/release-inspection'
+import {
   downloadEntries,
   listEntries,
   moduleMeta,
@@ -92,12 +127,31 @@ const total = ref(0)
 const errorMessage = ref('')
 const filters = ref<Record<string, string>>({})
 const filterFields = columns.slice(0, 3)
+const releaseChecks = ref<ReleaseCheckRow[]>([])
+const checkMessage = ref('')
 const statusSummary = computed(() =>
   statuses.map((status: string) => ({
     status,
     count: rows.value.filter((row) => String(row.status) === status).length,
   })),
 )
+
+function loadReleaseChecks() {
+  releaseChecks.value = listReleaseChecks()
+}
+
+function syncChecks() {
+  const result = syncReleaseChecksNow()
+  checkMessage.value = `已补同步：新增 ${result.added} 项，跳过已存在 ${result.skipped} 项（批次 ${result.batchId}）`
+  loadReleaseChecks()
+  reload()
+}
+
+function finishCheck(id: number) {
+  completeReleaseCheck(id)
+  loadReleaseChecks()
+  reload()
+}
 
 function resetFilters() {
   filters.value = {}
@@ -133,5 +187,8 @@ function reload() {
   }
 }
 
-onMounted(reload)
+onMounted(() => {
+  reload()
+  loadReleaseChecks()
+})
 </script>

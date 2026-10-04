@@ -36,6 +36,12 @@ export function allRows(): Record<string, EntryRow[]> {
   return cache
 }
 
+// 发布流水线会在「旧版本数据迁移 / 整批回退」步骤里直接改写 localStorage，
+// 之后业务层必须丢弃内存缓存重新读取，否则页面看到的还是迁移前的数据。
+export function invalidateCache(): void {
+  cache = null
+}
+
 export function listRows(key: string): EntryRow[] {
   return allRows()[key] ?? []
 }

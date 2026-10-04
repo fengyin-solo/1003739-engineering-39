@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "release": "tsx scripts/release.ts",
+    "release:selftest": "tsx scripts/selftest.ts"
   },
   "dependencies": {
     "pinia": "^2.1.7",
@@ -18,6 +20,7 @@
   "devDependencies": {
     "@types/node": "^20.11.30",
     "@vitejs/plugin-vue": "^5.0.4",
+    "tsx": "^4.7.1",
     "typescript": "^5.4.3",
     "vite": "^5.2.6",
     "vue-tsc": "^2.0.7"

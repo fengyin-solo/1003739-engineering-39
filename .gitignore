@@ -85,3 +85,7 @@ desktop.ini
 *.db
 *.pid
 *.seed
+
+# ===== 发布流水线本地数据 / 报告（命令行/CI 产物，不入库）=====
+.release-data/
+.release-reports/

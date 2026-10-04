@@ -8,3 +8,12 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+declare const __RELEASE_MANIFEST__:
+  | {
+      appVersion: string
+      sourceHash: string
+      builtAt: string
+      requiredDeps: { name: string; declared: string | null }[]
+    }
+  | undefined

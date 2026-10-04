@@ -1,5 +1,20 @@
 services:
-  frontend:
-    build: ./frontend
+  # 生产部署单元：多阶段构建产物，由 nginx 在 8080 提供静态资源与 SPA 回退。
+  # 本系统没有后端服务；“数据库”是浏览器 localStorage，发布流水线的本地副本落在
+  # frontend/.release-data/（仅命令行/CI 使用，不挂载进容器）。
+  web:
+    build:
+      context: ./frontend
+      target: serve
+    image: hydrology-monitor-web:latest
     ports:
-      - "5173:5173"
+      - "8080:8080"
+    environment:
+      - APP_ENV=${APP_ENV:-prod}
+      - APP_VERSION=${APP_VERSION:-1.0.0}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
