@@ -61,6 +61,25 @@ npm run build
 | 巡检记录 | `inspection` | 巡检记录 | 记录编号、站点编号、巡检日期 |
 | 测报方案 | `plan` | 测报方案 | 方案编号、方案名称、适用范围 |
 
+## 跨模块发布检查流水线
+
+运营概览页内置可复现的上线流水线（本地开发 → 构建 → 采样），Node 侧有等价的可回放 CLI，
+两者共用 `frontend/src/release/manifest.ts` 一份定义：
+
+```bash
+cd frontend
+npm run release:init     # 初始化文件数据库（含 1 条 1.0.0 旧版遗留记录）
+npm run release:run      # 八步流水线：依赖→环境→清单→快照→迁移→构建→部署→采样
+npm run release:retry    # 任一步失败后从失败步骤重试（失败时已整批回退到快照）
+npm run release:status   # 批次状态 + 各模块登记/待处理/异常/待办/采样清单
+npm run release:record   # 打印带时间戳的可回放发布记录
+```
+
+关键约定：同一时刻只保留一个发布批次；发布前快照只增不丢；旧版本数据按 schema 版本号
+顺序幂等迁移（1.0.0→1.1.0）；采样核查项 `REL-CHK-*` 同步写入「巡检记录」模块；任一步
+失败整批回退（恢复快照、摘掉部署指针、撤销核查项），再从失败步骤断点重试。浏览器入口在
+运营概览页底部，支持故障注入演练；完整说明见 [`frontend/RELEASE.md`](frontend/RELEASE.md)。
+
 ## 约定
 
 - 每个模块的页面在 `frontend/src/views/<模块>/index.vue`，页面只负责渲染，读写统一走

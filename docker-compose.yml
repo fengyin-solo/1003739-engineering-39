@@ -1,5 +1,10 @@
 services:
+  # 生产部署：多阶段构建出静态产物，由 nginx 托管（与发布流水线 deploy 步骤等价）
   frontend:
     build: ./frontend
+    image: hydrology-monitor-frontend:1.1.0
     ports:
-      - "5173:5173"
+      - "8080:80"
+    environment:
+      APP_ENV: prod
+    restart: unless-stopped

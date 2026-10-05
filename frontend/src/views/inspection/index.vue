@@ -18,6 +18,11 @@
       </article>
     </div>
 
+    <p v-if="releaseCheckCount > 0" class="release-sync-banner">
+      发布流水线已同步写入 <strong>{{ releaseCheckCount }}</strong> 条发布核查项（记录编号 REL-CHK-*），
+      失败回退时会随批次一并撤销。
+    </p>
+
     <p class="status-legend">
       <span v-for="item in statusSummary" :key="item.status" class="legend-item">
         {{ item.status }}：{{ item.count }}
@@ -92,6 +97,9 @@ const total = ref(0)
 const errorMessage = ref('')
 const filters = ref<Record<string, string>>({})
 const filterFields = columns.slice(0, 3)
+const releaseCheckCount = computed(() =>
+  rows.value.filter((row) => String(row['记录编号']).startsWith('REL-CHK-')).length,
+)
 const statusSummary = computed(() =>
   statuses.map((status: string) => ({
     status,
@@ -135,3 +143,15 @@ function reload() {
 
 onMounted(reload)
 </script>
+
+<style scoped>
+.release-sync-banner {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #e6f7ff;
+  border: 1px solid #91d5ff;
+  color: #096dd9;
+  font-size: 13px;
+}
+</style>

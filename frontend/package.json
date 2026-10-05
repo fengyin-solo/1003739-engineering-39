@@ -8,7 +8,13 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "release:init": "node scripts/release-pipeline.cjs init-data",
+    "release:run": "node scripts/release-pipeline.cjs run",
+    "release:retry": "node scripts/release-pipeline.cjs retry",
+    "release:status": "node scripts/release-pipeline.cjs status",
+    "release:record": "node scripts/release-pipeline.cjs record",
+    "release:inject": "node scripts/release-pipeline.cjs inject"
   },
   "dependencies": {
     "pinia": "^2.1.7",

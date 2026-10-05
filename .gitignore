@@ -85,3 +85,7 @@ desktop.ini
 *.db
 *.pid
 *.seed
+
+# ===== 发布流水线工作目录（快照/批次/文件数据库为本机运行态，不入库）=====
+frontend/.release/
+frontend/.release-cache/
